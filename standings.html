@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BSNL Standings</title>
+  <link rel="icon" type="image/x-icon" href="./resources/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-overlay"></div>
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="nav-logo">
+      <img src="./resources/navLogo.png" alt="BSNL Logo" />
+    </div>
+    <div class="nav-links">
+        <a href="index.html">HOME</a>
+        <a href="schedule.html">SCHEDULE</a>
+        <a href="standings.html">STANDINGS</a>
+        <a href="stats.html">STATS</a>
+        <a href="teams.html">TEAMS</a>
+      </div>
+  </nav>
+
+  <h1>STANDINGS</h1>
+
+  <div class="standings-table" id="standings-table">
+    <div class="standings-header">
+        <div class="standings-stat">
+            TEAM
+        </div>
+        <div class="standings-stat">
+            <i class="fa-solid fa-chevron-up sort-btn" data-key="rank" data-dir="asc"></i>
+            RANK
+            <i class="fa-solid fa-chevron-down sort-btn" data-key="rank" data-dir="desc"></i>
+        </div>
+        <div class="standings-stat">
+            <i class="fa-solid fa-chevron-up sort-btn" data-key="gp" data-dir="asc"></i>
+            GP
+            <i class="fa-solid fa-chevron-down sort-btn" data-key="gp" data-dir="desc"></i>
+        </div>
+        <div class="standings-stat">
+            <i class="fa-solid fa-chevron-up sort-btn" data-key="w" data-dir="asc"></i>
+            W
+            <i class="fa-solid fa-chevron-down sort-btn" data-key="w" data-dir="desc"></i>
+        </div>
+        <div class="standings-stat">
+            <i class="fa-solid fa-chevron-up sort-btn" data-key="l" data-dir="asc"></i>
+            L
+            <i class="fa-solid fa-chevron-down sort-btn" data-key="l" data-dir="desc"></i>
+        </div>
+        <div class="standings-stat">
+            <i class="fa-solid fa-chevron-up sort-btn" data-key="otl" data-dir="asc"></i>
+            OTL
+            <i class="fa-solid fa-chevron-down sort-btn" data-key="otl" data-dir="desc"></i>
+        </div>
+        <div class="standings-stat">
+            <i class="fa-solid fa-chevron-up sort-btn" data-key="pts" data-dir="asc"></i>
+            PTS
+            <i class="fa-solid fa-chevron-down sort-btn" data-key="pts" data-dir="desc"></i>
+        </div>
+        <div class="standings-stat">
+            <i class="fa-solid fa-chevron-up sort-btn" data-key="cf" data-dir="asc"></i>
+            CF
+            <i class="fa-solid fa-chevron-down sort-btn" data-key="cf" data-dir="desc"></i>
+        </div>
+        <div class="standings-stat">
+            <i class="fa-solid fa-chevron-up sort-btn" data-key="ca" data-dir="asc"></i>
+            CA
+            <i class="fa-solid fa-chevron-down sort-btn" data-key="ca" data-dir="desc"></i>
+        </div>       
+        <div class="standings-stat">
+            <i class="fa-solid fa-chevron-up sort-btn" data-key="plusMinus" data-dir="asc"></i>
+            +/-
+            <i class="fa-solid fa-chevron-down sort-btn" data-key="plusMinus" data-dir="desc"></i>
+        </div>        
+    </div>
+    <div class="standings-body" id="standings-body">
+        Loading...
+    </div>
+  </div>
+
+  <div class="legend compact">
+    <strong>Legend:</strong>
+    RANK = Position,&nbsp;
+    GP = Games Played,&nbsp;
+    W = Wins,&nbsp;
+    L = Losses,&nbsp;
+    OTL = OT Losses,&nbsp;
+    PTS = Points,&nbsp;
+    CF = Cups For,&nbsp;
+    CA = Cups Against,&nbsp;
+    +/- = Plus/Minus
+  </div>
+  
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="standings.js"></script>
+</html>
