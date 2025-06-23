@@ -153,7 +153,7 @@ async function getEvents(dateObj) {
         const logo2 = teamLogos[event.team2_name] || '';
 
         const gameHTML = `
-            <div class="game-card ${isCompleted ? '' : 'upcoming'}">
+            <div class="game-card ${isCompleted ? '' : 'upcoming'}" onclick="showGameDetails(${event.id})">
                 <div class="team-row">
                     <img class="team-game-logo" src="${logo1}" alt="${event.team1_name} logo" />
                     <span class="team-name">${event.team1_name}</span>
@@ -183,6 +183,37 @@ async function getEvents(dateObj) {
     events.innerHTML = eventsHTML;
 }
 
+function closeModal() {
+    document.getElementById('game-modal').classList.add('hidden');
+    document.getElementById('modal-body').innerHTML = '';
+}
+
+async function showGameDetails(gameId) {
+    try {
+        const res = await fetch(`https://bsnl-backend.vercel.app/api/eventsid?id=${gameId}`);
+        const game = await res.json();
+
+        const modalBody = `
+            <h2>${game.team1_name} vs ${game.team2_name}</h2>
+            <p>Score: ${game.score1} - ${game.score2}</p>
+            <p>Winner: ${game.winner}</p>
+            <p>${game.overtime ? 'Final (OT)' : 'Final'}</p>
+
+            <h3>${game.team1_name} Players</h3>
+            <p>${game.team1_player1}: ${game.team1_player1_cups} cups</p>
+            <p>${game.team1_player2}: ${game.team1_player2_cups} cups</p>
+
+            <h3>${game.team2_name} Players</h3>
+            <p>${game.team2_player1}: ${game.team2_player1_cups} cups</p>
+            <p>${game.team2_player2}: ${game.team2_player2_cups} cups</p>
+        `;
+
+        document.getElementById('modal-body').innerHTML = modalBody;
+        document.getElementById('game-modal').classList.remove('hidden');
+    } catch (err) {
+        console.error('Failed to load game details:', err);
+    }
+}
 
 prevButton.addEventListener('click', function() {
     currentDate.setMonth(currentDate.getMonth() - 1);
