@@ -3,6 +3,27 @@ const dates = document.getElementById("dates");
 const prevButton = document.getElementById("prev-button");
 const nextButton = document.getElementById("next-button");
 
+let teamLogos = {};
+let teamsArray = [];
+
+async function loadTeamLogos() {
+    try {
+        const res = await fetch(`https://bsnl-backend.vercel.app/api/teams`);
+        const data = await res.json();
+
+        if (!Array.isArray(data)) {
+            console.error('Unexpected response:', data);
+            return;
+        }
+
+        data.forEach(team => {
+            teamLogos[team.name] = team.logo_path;
+        });
+    } catch (err) {
+        console.error('Error fetching team logos:', err);
+    }
+}
+
 let currentDate = new Date();
 
 async function getEventDatesForMonth(year, month) {
@@ -109,14 +130,13 @@ async function getEvents(dateObj) {
         eventsArray = [];
     }
 
-
     eventsHTML = `<h1>${dateObj.toDateString()}</h1>`;
 
     if (eventsArray.length === 0) {
         eventsHTML += `<p>No events scheduled.</p>`;
     }
-    
-    eventsArray.forEach(event => {
+
+    for (const event of eventsArray) {
         if (!event.game) {
             eventsHTML += `
                 <div class="event-card">
@@ -124,35 +144,42 @@ async function getEvents(dateObj) {
                     <p class="event-meta">League Event</p>
                 </div>
             `;
-            return;
+            continue;
         }
-    
+
         const isCompleted = event.score1 !== null && event.score2 !== null;
-    
+
+        const logo1 = teamLogos[event.team1_name] || '';
+        const logo2 = teamLogos[event.team2_name] || '';
+
         const gameHTML = `
             <div class="game-card ${isCompleted ? '' : 'upcoming'}">
-                <div class="teams">
-                    <div class="team">
-                        <span class="team-name">${event.team1_name}</span>
-                        <span class="score ${isCompleted && event.winner === event.team1_name ? 'winner' : ''}">
-                            ${isCompleted ? event.score1 : '-'}
-                        </span>
-                    </div>
-                    <div class="team">
-                        <span class="team-name">${event.team2_name}</span>
-                        <span class="score ${isCompleted && event.winner === event.team2_name ? 'winner' : ''}">
-                            ${isCompleted ? event.score2 : '-'}
-                        </span>
-                    </div>
+                <div class="team-row">
+                    <img class="team-game-logo" src="${logo1}" alt="${event.team1_name} logo" />
+                    <span class="team-name">${event.team1_name}</span>
+                    <span class="score ${isCompleted && event.winner === event.team1_name ? 'winner' : ''}">
+                        ${isCompleted ? event.score1 : '-'}
+                    </span>
                 </div>
-                <div class="overtime">
-                    ${isCompleted ? (event.overtime ? 'Final (OT)' : 'Final') : 'Upcoming'}
+                <div class="team-row">
+                    <img class="team-game-logo" src="${logo2}" alt="${event.team2_name} logo" />
+                    <span class="team-name">${event.team2_name}</span>
+                    <span class="score ${isCompleted && event.winner === event.team2_name ? 'winner' : ''}">
+                        ${isCompleted ? event.score2 : '-'}
+                    </span>
+                </div>
+                <div class="overtime-row">
+                    <span class="overtime">
+                        ${isCompleted ? (event.overtime ? 'Final (OT)' : 'Final') : 'Upcoming'}
+                    </span>
                 </div>
             </div>
         `;
+
+
         eventsHTML += gameHTML;
-    });
-    
+    }
+
     events.innerHTML = eventsHTML;
 }
 
@@ -169,3 +196,4 @@ nextButton.addEventListener('click', function() {
 
 updateCalendar();
 getEvents(currentDate);
+loadTeamLogos();
