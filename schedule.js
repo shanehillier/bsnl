@@ -156,14 +156,14 @@ async function getEvents(dateObj) {
             <div class="game-card ${isCompleted ? '' : 'upcoming'}" onclick="showGameDetails(${event.id})">
                 <div class="team-row">
                     <img class="team-game-logo" src="${logo1}" alt="${event.team1_name} logo" />
-                    <span class="team-name">${event.team1_name}</span>
+                    <span class="team-game-name">${event.team1_name}</span>
                     <span class="score ${isCompleted && event.winner === event.team1_name ? 'winner' : ''}">
                         ${isCompleted ? event.score1 : '-'}
                     </span>
                 </div>
                 <div class="team-row">
                     <img class="team-game-logo" src="${logo2}" alt="${event.team2_name} logo" />
-                    <span class="team-name">${event.team2_name}</span>
+                    <span class="team-game-name">${event.team2_name}</span>
                     <span class="score ${isCompleted && event.winner === event.team2_name ? 'winner' : ''}">
                         ${isCompleted ? event.score2 : '-'}
                     </span>

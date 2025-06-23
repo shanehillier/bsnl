@@ -286,7 +286,7 @@ body {
     object-fit: contain;
 }
 
-.team-name {
+.team-game-name {
     flex: 1;  
     font-size: 1.8rem;
     color: #1a2940;
