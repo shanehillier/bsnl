@@ -117,20 +117,41 @@ async function fetchAndCalculateStats() {
 }
 
 
-document.querySelectorAll('.sort-btn').forEach(button => {
-    button.addEventListener('click', () => {
-      const key = button.dataset.key;
-      const direction = button.dataset.dir;
-  
-      const sorted = [...currentStats].sort((a, b) => {
-        if (a[key] === b[key]) return 0;
-        return direction === 'asc' ? a[key] - b[key] : b[key] - a[key];
-      });
+let sortState = {}; // tracks which column & direction
 
-  
-      renderStats(sorted);
+document.querySelectorAll('.standings-stat[data-key]').forEach(header => {
+  header.addEventListener('click', () => {
+    const key = header.dataset.key;
+    const currentDir = sortState[key] || 'desc';
+    const newDir = currentDir === 'asc' ? 'desc' : 'asc';
+    sortState = {}; // reset: only one column sorted
+    sortState[key] = newDir;
+
+    // Remove sorted classes from all
+    document.querySelectorAll('.standings-stat').forEach(h => {
+      h.classList.remove('sorted', 'asc');
     });
+
+    // Add sorted classes to clicked header
+    header.classList.add('sorted');
+    if (newDir === 'asc') {
+      header.classList.add('asc');
+    }
+
+    // Sort data
+    const sorted = [...currentStats].sort((a, b) => {
+      if (a[key] === b[key]) return 0;
+      if (typeof a[key] === 'string') {
+        return newDir === 'asc' ? a[key].localeCompare(b[key]) : b[key].localeCompare(a[key]);
+      } else {
+        return newDir === 'asc' ? a[key] - b[key] : b[key] - a[key];
+      }
+    });
+
+    renderStats(sorted);
   });
+});
+
 
 function renderStats(data) {
     const container = document.getElementById('stats-body');
@@ -140,7 +161,7 @@ function renderStats(data) {
       const row = document.createElement('div');
       row.classList.add('standings-row');
       row.style.display = 'grid';
-      row.style.gridTemplateColumns = '2fr repeat(7, 1fr)';
+      row.style.gridTemplateColumns = '2fr 3fr repeat(6, 1fr)';
       row.innerHTML = `
         <div class="standings-data">${player.name}</div>
         <div class="standings-team">${player.team}</div>

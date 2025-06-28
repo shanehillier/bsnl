@@ -194,18 +194,43 @@ async function showGameDetails(gameId) {
         const game = await res.json();
 
         const modalBody = `
-            <h2>${game.team1_name} vs ${game.team2_name}</h2>
-            <p>Score: ${game.score1} - ${game.score2}</p>
-            <p>Winner: ${game.winner}</p>
-            <p>${game.overtime ? 'Final (OT)' : 'Final'}</p>
+        <div class="game-modal-header">
+            <span>${game.team1_name}</span>
+            <img src="${teamLogos[game.team1_name]}" alt="${game.team1_name} Logo" style="height: 30px;">
+            <span>${game.score1}</span>
+            <span style="margin: 0 10px;">${game.overtime ? 'Final (OT)' : 'Final'}</span>
+            <span>${game.score2}</span>
+            <img src="${teamLogos[game.team2_name]}" alt="${game.team2_name} Logo" style="height: 30px;">
+            <span>${game.team2_name}</span>
+            <span class="close-button" onclick="closeModal()">×</span>
+        </div>
 
-            <h3>${game.team1_name} Players</h3>
-            <p>${game.team1_player1}: ${game.team1_player1_cups} cups</p>
-            <p>${game.team1_player2}: ${game.team1_player2_cups} cups</p>
+            <h2>Box Score</h2>
+            <h3>${game.team1_name}</h3>
+            <table class="game-table">
+                <tr>
+                    <th>PLAYER</th><th>CUPS</th>
+                </tr>
+                <tr>
+                    <td>${game.team1_player1}</td><td>${game.team1_player1_cups}</td>
+                </tr>
+                <tr>
+                    <td>${game.team1_player2}</td><td>${game.team1_player2_cups}</td>
+                </tr>
+            </table>
 
-            <h3>${game.team2_name} Players</h3>
-            <p>${game.team2_player1}: ${game.team2_player1_cups} cups</p>
-            <p>${game.team2_player2}: ${game.team2_player2_cups} cups</p>
+            <h3>${game.team2_name}</h3>
+            <table class="game-table">
+                <tr>
+                    <th>PLAYER</th><th>CUPS</th>
+                </tr>
+                <tr>
+                    <td>${game.team2_player1}</td><td>${game.team2_player1_cups}</td>
+                </tr>
+                <tr>
+                    <td>${game.team2_player2}</td><td>${game.team2_player2_cups}</td>
+                </tr>
+            </table>
         `;
 
         document.getElementById('modal-body').innerHTML = modalBody;

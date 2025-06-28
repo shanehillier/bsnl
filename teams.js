@@ -1,3 +1,24 @@
+let teamLogos = {};
+
+async function loadTeamLogos() {
+    try {
+        const res = await fetch(`https://bsnl-backend.vercel.app/api/teams`);
+        const data = await res.json();
+
+        if (!Array.isArray(data)) {
+            console.error('Unexpected response:', data);
+            return;
+        }
+
+        data.forEach(team => {
+            teamLogos[team.name] = team.logo_path;
+        });
+    } catch (err) {
+        console.error('Error fetching team logos:', err);
+    }
+    loadTeams();
+}
+
 function renderTeam(team, games) {
     const container = document.getElementById("team-main");
     wins = 0;
@@ -27,7 +48,8 @@ function renderTeam(team, games) {
           
             // Identify opponent
             const opponent = game.team1_name === team.name ? game.team2_name : game.team1_name;
-          
+            const opponentLogo = teamLogos[opponent];
+
             // Identify result
             let result = "Upcoming";
             if (game.winner === team.name) {
@@ -47,7 +69,10 @@ function renderTeam(team, games) {
             teamDivHTML += `
               <tr>
                 <td>${game.date}</td>
-                <td>${opponent}</td>
+               <td>
+                ${opponentLogo ? `<img src="${opponentLogo}" alt="${opponent} Logo" style="height: 20px;">` : ''}
+                ${opponent}
+               </td>
                 <td>${result}</td>
               </tr>
             `;
@@ -121,5 +146,5 @@ function renderTeam(team, games) {
   });
   }
 
-  loadTeams();
+loadTeamLogos();
   

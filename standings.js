@@ -1,4 +1,24 @@
 let currentStandings = [];
+let teamLogos = {};
+
+async function loadTeamLogos() {
+    try {
+        const res = await fetch(`https://bsnl-backend.vercel.app/api/teams`);
+        const data = await res.json();
+
+        if (!Array.isArray(data)) {
+            console.error('Unexpected response:', data);
+            return;
+        }
+
+        data.forEach(team => {
+            teamLogos[team.name] = team.logo_path;
+        });
+    } catch (err) {
+        console.error('Error fetching team logos:', err);
+    }
+      fetchAndCalculateStandings();
+}
 
 async function fetchAndCalculateStandings() {
   let gamesArray = [];
@@ -102,16 +122,36 @@ async function fetchAndCalculateStandings() {
   renderStandings(currentStandings);
   }
 
-  document.querySelectorAll('.sort-btn').forEach(button => {
-    button.addEventListener('click', () => {
-      const key = button.dataset.key;
-      const direction = button.dataset.dir;
-  
+  let sortState = {}; // track current direction per column
+
+  document.querySelectorAll('.standings-stat[data-key]').forEach(header => {
+    header.addEventListener('click', () => {
+      const key = header.dataset.key;
+      const currentDir = sortState[key] || 'desc';
+      const newDir = currentDir === 'asc' ? 'desc' : 'asc';
+      sortState = {}; // reset so only one active sort
+      sortState[key] = newDir;
+
+      // Remove sorted classes from all
+      document.querySelectorAll('.standings-stat').forEach(h => {
+        h.classList.remove('sorted', 'asc');
+      });
+
+      // Add sorted classes to current header
+      header.classList.add('sorted');
+      if (newDir === 'asc') {
+        header.classList.add('asc');
+      }
+
       const sorted = [...currentStandings].sort((a, b) => {
         if (a[key] === b[key]) return 0;
-        return direction === 'asc' ? a[key] - b[key] : b[key] - a[key];
+        if (typeof a[key] === 'string') {
+          return newDir === 'asc' ? a[key].localeCompare(b[key]) : b[key].localeCompare(a[key]);
+        } else {
+          return newDir === 'asc' ? a[key] - b[key] : b[key] - a[key];
+        }
       });
-  
+
       renderStandings(sorted);
     });
   });
@@ -121,12 +161,15 @@ async function fetchAndCalculateStandings() {
     container.innerHTML = '';
   
     data.forEach(team => {
+      teamLogo = teamLogos[team.team];
       const row = document.createElement('div');
       row.classList.add('standings-row');
       row.style.display = 'grid';
-      row.style.gridTemplateColumns = 'repeat(10, 1fr)';
       row.innerHTML = `
-        <div class="standings-team">${team.team}</div>
+        <div class="standings-team" style="display: flex; align-items: center; gap: 6px;">
+        ${teamLogo ? `<img src="${teamLogo}" alt="${team.team} Logo" style="height: 20px;">` : ''}
+        <span>${team.team}</span>
+      </div>
         <div class="standings-data">${team.rank}</div>
         <div class="standings-data">${team.gp}</div>
         <div class="standings-data">${team.w}</div>
@@ -141,4 +184,4 @@ async function fetchAndCalculateStandings() {
     });
   }  
   
-  fetchAndCalculateStandings();
+  loadTeamLogos();

@@ -273,6 +273,20 @@ body {
     gap: 6px;
 }
 
+.game-modal-header{
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    background: #1a2940;
+    padding: 10px; 
+    font-weight: bold;
+    color: #fff;
+    border-bottom: 4px solid #9c353d;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding-left: 5%;
+}
+
 .team-row {
     display: flex;
     align-items: center;
@@ -358,7 +372,7 @@ body {
     padding: 1rem 1.25rem;
     margin: 1rem 0;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    max-width: 500px;
+    gap: 6px;
     transition: background 0.3s ease;
   }
 
@@ -381,11 +395,27 @@ body {
 
 .modal-content {
   background-color: white;
-  padding: 1.5rem;
   border-radius: 10px;
   max-width: 600px;
   width: 90%;
 }
+
+  .game-table {
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-collapse:separate;
+  }
+  
+  .game-table th {
+    border: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  .game-table td {
+    border: none;
+  }
 
 .hidden {
   display: none;
@@ -455,11 +485,12 @@ body {
     position: sticky;
     top:0;
     display: grid;
-    grid-template-columns: repeat(10,1fr);
+    grid-template-columns: 2.5fr repeat(9,1fr);
   }
 
   .standings-row {
     font-size: 20px;
+    grid-template-columns: 2.5fr repeat(9,1fr);
   }
 
   .standings-stat {
@@ -468,7 +499,32 @@ body {
     font-weight: 600;
     background-color: rgb(247, 247, 247);
     color: #1a2940;
+    cursor: pointer;
   }
+
+  /* Optional: highlight sorted column */
+.standings-stat.sorted {
+  font-weight: bold;
+  color: #9c353d; /* nice highlight color, change as you like */
+  position: relative;
+}
+
+/* Add arrow after header text */
+.standings-stat.sorted::after {
+  content: '';
+  border: 5px solid transparent;
+  border-top-color: #9c353d; /* arrow color */
+  position: absolute;
+  right: 6px; /* adjust spacing */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Flip arrow for ascending sort */
+.standings-stat.sorted.asc::after {
+  border-top-color: transparent;
+  border-bottom-color: #9c353d;
+}
 
   .standings-team {
     text-align: center;
@@ -511,7 +567,7 @@ body {
     position: sticky;
     top:0;
     display: grid;
-    grid-template-columns: 2fr repeat(7,1fr);
+    grid-template-columns: 2fr 3fr repeat(6,1fr);
   }
 
   /*Team Styles*/
@@ -567,7 +623,7 @@ body {
   }
 
   .mini-wrapper {
-    max-height: 100.5px;
+    max-height: 300px;
     overflow-y: scroll;
     border-radius: 10px;
     border: 1px solid #1a2940;
@@ -586,6 +642,9 @@ body {
     color: #1a2940;
     padding: 8px 12px;
     font-size: 0.95rem;
+    border: none;
+    background-color: #f0f0f0;
+    color: #1a2940;
   }
   
   .mini-table td {
@@ -594,10 +653,4 @@ body {
     font-size: 0.95rem;
     border-radius: 10px;
     background-color: #ffffff;
-  }
-  
-  .mini-table th {
-    border: none;
-    background-color: #f0f0f0;
-    color: #1a2940;
   }
