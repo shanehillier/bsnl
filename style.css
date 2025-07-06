@@ -56,6 +56,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 4px solid #9c353d;
   }
   
   .nav-logo {
@@ -107,7 +108,7 @@ body {
   .news-section {
     overflow-y: scroll;
     max-width: 800px;
-    max-height: 65vh;
+    height: 65vh;
     margin: 40px auto;
     margin-top: 0;
     margin-bottom: 20px;
@@ -654,3 +655,199 @@ body {
     border-radius: 10px;
     background-color: #ffffff;
   }
+.main-sections {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 20px;
+  gap: 20px;
+}
+
+/* Make side columns skinny and center wide */
+.latest-results {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 15px;
+  border-radius: 8px;
+  width: 20%; /* about 20% each */
+  height: 65vh;
+  overflow-y: scroll;
+}
+
+.latest-results h2{
+  color: #9c353d
+}
+
+.standings {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 15px;
+  border-radius: 8px;
+  width: 20%; /* about 20% each */
+  height: 65vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.standings h2{
+  color: #9c353d
+}
+
+.standings-body {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.small-standings-row {
+  margin-bottom: 30px;
+}
+
+.news-section {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  width: 60%; /* center takes more space */
+}
+
+.latest-results h2,
+.standings h2,
+.news-section h2 {
+  margin-top: 0;
+  font-size: 1.5em;
+}
+
+.latest-results ul,
+.standings ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.news-item {
+  margin-bottom: 15px;
+}
+
+.latest-result-card {
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 4px;
+}
+
+.latest-result-card .team-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.latest-result-card .team-logo {
+  height: 30px;
+  margin-right: 4px;
+}
+
+.latest-result-card .team-name {
+  flex: 1;
+  margin-left: 4px;
+  font-size: 0.9em;
+}
+
+.latest-result-card .score {
+  min-width: 16px;
+  text-align: right;
+}
+
+.latest-result-card .score.winner {
+  font-weight: bold;
+}
+
+.overtime-text {
+  font-size: 0.75em;
+  color: #aaa;
+  text-align: right;
+}
+
+/* news page main container */
+.news-page-content {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* individual article block */
+.news-article {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* headline inside article */
+.news-article h2 {
+  margin-top: 0;
+  font-size: 32px;
+  color: #9c353d;
+}
+
+.news-article h3 {
+  color: #1a2940;
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+/* article paragraph text */
+.news-article p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* link styled as button */
+.read-more {
+  display: inline-block;
+  margin-top: 10px;
+  color: white;
+  background: #333;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.read-more:hover {
+  background: #555;
+}
+
+/* special styling for quote article */
+.quote-article {
+  text-align: center;
+  font-style: italic;
+  font-size: 1.2em;
+  background: rgba(255,255,255,0.7);
+}
+
+.news-article {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.news-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap; /* ensures responsiveness on small screens */
+}
+
+.news-header h2 {
+  flex: 1;
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.news-image {
+  width: 500px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
