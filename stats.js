@@ -104,7 +104,7 @@ async function fetchAndCalculateStats() {
                 stats[name].cups += team2_player2_cups;
             }
         }
-        stats[name].cpg = round(stats[name].cups/stats[name].gp, 2);
+        stats[name].cpg = (stats[name].cups/stats[name].gp).toFixed(2);
     }
 
     const statsArray = Object.values(stats)
