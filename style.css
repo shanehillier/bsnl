@@ -4,6 +4,7 @@ body {
     background-color: #f8f9fa;
     padding: 0;
     margin: 0;
+    transition: 0.3s;
   }
 
   .background-overlay {
@@ -194,7 +195,7 @@ body {
     gap: 5px;
   }
 
-  .date {
+.date {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -207,26 +208,26 @@ body {
     height: 40px;
     width: 40px;
     color: #1a2940;
-  }
+    background-color: #f7f7f7;
+    transition: background-color 0.3s, color 0.3s;
+}
 
-  .date:hover {
+.date:hover {
     background-color: rgb(247, 247, 247);
-    transition-duration: .3s;
-  }
+}
 
-  .date.active {
+.date.active {
     background-color: #1a2940;
     color: white;
-    transition-duration: .3s;
-  }
+}
 
-  .date.inactive {
+.date.inactive {
     color: rgb(223, 223, 223);
-  }
+}
 
-  .date.inactive:hover {
-    color: rgb(255, 255, 255);
-  }
+.date.inactive:hover {
+    color: #fff;
+}
 
   .date.has-event {
     position: relative;
@@ -850,4 +851,287 @@ body {
   height: auto;
   border-radius: 8px;
   object-fit: cover;
+}
+
+/* Playoff Bracket Styles */
+    .bracket-container { 
+      display:flex; 
+      justify-content:center; 
+      margin:40px auto; 
+      max-width:1400px; 
+    }
+    .bracket { 
+      display:flex; 
+      gap:80px; 
+    }
+    .round { 
+      display:flex; 
+      flex-direction:column; 
+      justify-content:center; 
+      gap:60px; 
+    }
+    .round h2 { 
+      text-align:center; 
+      margin-bottom:20px; 
+      border-bottom:2px solid #ddd; 
+      color:#444;
+    }
+    .playoffmatch { 
+      background:#f9f9f9; 
+      border:1px solid #ddd; 
+      border-radius:10px;
+      padding:10px 14px; 
+      min-width:220px; 
+      position:relative; 
+      box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    }
+    .playoffteam { 
+      display:flex; 
+      align-items:center; 
+      gap:8px; 
+      background:#fff; 
+      padding:4px 8px; 
+      border-radius:6px; 
+      border:1px solid #eee;
+    }
+    .playoffmatch span { 
+      text-align:center; 
+      display:block; 
+      color:#666; 
+      font-size:0.8rem; 
+      margin:6px 0;
+    }
+    .note { 
+      font-size:0.75rem; 
+      color:#999; 
+      font-style:italic; 
+      margin-top:6px;
+    }
+    /* connector lines */
+    .playoffmatch::after { 
+      content:""; 
+      position:absolute; 
+      top:50%; 
+      right:-40px; 
+      width:40px; 
+      height:2px; 
+      background:#aaa; 
+    }
+    .round:last-child .playoffmatch::after { display:none; }
+
+
+  /*Dark Mode toggles*/
+  /* Floating toggle button */
+.mode-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: #eee;
+  color: #222;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  transition: background 0.3s, transform 0.2s;
+  z-index: 1000;
+}
+
+.mode-toggle:hover {
+  background: #ddd;
+  transform: scale(1.1);
+}
+
+/* Dark mode */
+body.dark-mode {
+  background: #121212;
+  color: #f0f0f0;
+}
+
+body.dark-mode .mode-toggle {
+  background: #333;
+  color: #f0f0f0;
+}
+
+body.dark-mode nav,
+body.dark-mode .standings-table,
+body.dark-mode .match {
+  background: #1e1e1e !important;
+  color: #f0f0f0 !important;
+  border-color: #444 !important;
+}
+
+body.dark-mode .team {
+  background: #2a2a2a !important;
+  border-color: #555 !important;
+}
+
+body.dark-mode .match::after {
+  background: #888;
+}
+
+body.dark-mode .standings {
+  background: #212121;
+}
+
+body.dark-mode .news-section {
+  background: #212121;
+}
+
+body.dark-mode .latest-results {
+  background: #212121;
+}
+
+body.dark-mode .news-section h2 {
+  color: #ffffff;
+}
+
+body.dark-mode .news-section h3 {
+  color: #ffffff;
+}
+
+body.dark-mode p {
+  color: #ffffff;
+}
+
+body.dark-mode h1 {
+  color: #ffffff;
+}
+
+body.dark-mode .team-name {
+  color: #ffffff;
+}
+
+body.dark-mode .score {
+  color: #919191;
+}
+
+body.dark-mode .score.winner {
+  color: #9c353d;
+}
+
+body.dark-mode .news-article {
+  background: #212121;
+}
+
+body.dark-mode .news-article h3 {
+  color: #ffffff;
+}
+
+body.dark-mode .events {
+  background: #212121;
+}
+
+body.dark-mode .calendar {
+  background: #212121;
+}
+
+body.dark-mode .date {
+    background-color: #2a2a2a;
+    color: #ccc;
+}
+
+body.dark-mode .date.active {
+    background-color: #ffffff;
+    color: #222;
+}
+
+body.dark-mode .date.inactive {
+    background-color: #212121;
+    color: #aaa;
+}
+
+body.dark-mode .date:hover {
+    background-color: #333; /* hover effect in dark mode */
+}
+
+body.dark-mode .game-card {
+  background: #3e3e3e;
+}
+
+body.dark-mode .team-game-name {
+  color: #ffffff;
+}
+
+body.dark-mode .nav-links a:hover {
+    background-color: #636363;
+    transition-duration: .3s;
+  }
+  
+body.dark-mode .modal-content  {
+  background: #212121;
+}
+
+body.dark-mode .modal-content table {
+  background: #1d1d1d;
+}
+
+body.dark-mode .modal-content tbody {
+  background: #1d1d1d;
+}
+
+body.dark-mode .modal-content tr {
+  background: #3e3e3e;
+}
+
+body.dark-mode .modal-content th {
+  background: #1b1b1b;
+  color: #ffffff;
+}
+
+body.dark-mode .modal-content td {
+  color: #ffffff;
+}
+
+body.dark-mode .standings-header {
+  background-color: #3e3e3e;
+  color: #ffffff;
+}
+
+body.dark-mode .standings-stat {
+  background-color: #3e3e3e;
+  color: #ffffff;
+}
+
+body.dark-mode .standings-data {
+  color: #ffffff;
+}
+
+body.dark-mode .team-card {
+  background-color: #1d1d1d;
+}
+
+body.dark-mode .mini-table {
+  background: #1d1d1d;
+}
+
+body.dark-mode .mini-table tbody {
+  background: #1d1d1d;
+}
+
+body.dark-mode .mini-table tr {
+  background: #3e3e3e;
+}
+
+body.dark-mode .mini-table th {
+  background: #1b1b1b;
+  color: #ffffff;
+}
+
+body.dark-mode .mini-table td {
+  background: #3e3e3e;
+  color: #ffffff;
+}
+
+body.dark-mode .round h2 {
+  color: #ffffff;
+}
+
+body.dark-mode .round .playoffmatch {
+  background: #1d1d1d;
+}
+
+body.dark-mode .round .playoffteam {
+  background: #3e3e3e;
 }
