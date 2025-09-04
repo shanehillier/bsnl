@@ -5,6 +5,7 @@ const savedMode = localStorage.getItem('theme');
 if (savedMode === 'dark') {
     document.body.classList.add('dark-mode');
     toggleBtn.textContent = '☀️';
+    forceRepaint();
 }
 
 toggleBtn.addEventListener('click', () => {
