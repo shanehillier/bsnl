@@ -12,4 +12,14 @@ toggleBtn.addEventListener('click', () => {
     const isDark = document.body.classList.contains('dark-mode');
     toggleBtn.textContent = isDark ? '☀️' : '🌙';
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    forceRepaint();
 });
+
+
+function forceRepaint() {
+  document.documentElement.style.display = 'none';
+  // next frame, show it again
+  requestAnimationFrame(() => {
+    document.documentElement.style.display = '';
+  });
+}
