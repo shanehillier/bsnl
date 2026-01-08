@@ -1,121 +1,83 @@
+const SEASONS = {
+  s1: { start: new Date('2025-06-01'), end: new Date('2026-01-31') },
+};
+
 let currentStats = [];
+let allGames = [];
 
 async function fetchAndCalculateStats() {
-    let playersArray = [];
-    try {
-        const res = await fetch(`https://bsnl-backend.vercel.app/api/players`);
-        const data = await res.json();
+  const seasonValue = document.getElementById('season-filter')?.value || 'all';
+  const typeValue = document.getElementById('type-filter')?.value || 'total';
 
-    if (!Array.isArray(data)) {
-        console.error('Unexpected response:', data);
-        playersArray = [];
+  const playersRes = await fetch(`https://bsnl-backend.vercel.app/api/players`);
+  const playersArray = await playersRes.json();
+
+    if (allGames.length === 0) {
+        const gamesRes = await fetch(`https://bsnl-backend.vercel.app/api/games`);
+        allGames = await gamesRes.json();
     }
 
-    playersArray = data;
+    let filteredGames = [...allGames];
 
-  } catch (err) {
-      console.error('Error fetching events:', err);
-      playersArray = [];
-  }
+    if (seasonValue !== 'all') {
+        const { start, end } = SEASONS[seasonValue];
+        filteredGames = filteredGames.filter(g => {
+        const gameDate = new Date(g.date);
+        return gameDate >= start && gameDate <= end;
+    });
+    }
 
+  // Filter games by type
+    if (typeValue === 'regular') {
+        filteredGames = filteredGames.filter(g => g.event_name !== "Playoffs");
+        console.log(filteredGames);
+        } else if (typeValue === 'playoffs') {
+        filteredGames = filteredGames.filter(g => g.event_name === "Playoffs");
+}
+
+  // Build stats
     const stats = {};
 
     for (const player of playersArray) {
-        const {
-        name,
-        team_name
-        } = player;
-
-        if (!stats[name]){
-            stats[name] = {
-                name: name,
-                team: team_name,
-                gp: 0,
-                w: 0,
-                l: 0,
-                otl: 0,
-                cups: 0,
-                cpg: 0,
-            };
-        } 
-
-        let gamesArray = [];
-        try {
-            const res = await fetch(`https://bsnl-backend.vercel.app/api/games`);
-            const data = await res.json();
-
-            if (!Array.isArray(data)) {
-                console.error('Unexpected response:', data);
-                gamesArray = [];
-            }
-
-            gamesArray = data;
-
-        } catch (err) {
-            console.error('Error fetching events:', err);
-            gamesArray = [];
-        }
-
-        for (const game of gamesArray) {
-            const {
-                team1_name,
-                team2_name,
-                score1,
-                score2,
-                winner,
-                loser,
-                overtime,
-                team1_player1,
-                team1_player1_cups,
-                team1_player2,
-                team1_player2_cups,
-                team2_player1,
-                team2_player1_cups,
-                team2_player2,
-                team2_player2_cups,
-                } = game;
-            
-            if(team1_name == team_name || team2_name == team_name){
-                stats[name].gp ++;
-            }
-            
-            if (winner == team_name){
-                stats[name].w ++;
-            }
-
-            if (loser == team_name){
-                if (overtime){
-                    stats[name].otl ++;
-                }
-                else{
-                    stats[name].l ++;
-                }
-            }
-            if(team1_player1 == name){
-                stats[name].cups += team1_player1_cups;
-            }
-            if(team1_player2 == name){
-                stats[name].cups += team1_player2_cups;
-            }
-            if(team2_player1 == name){
-                stats[name].cups += team2_player1_cups;
-            }
-            if(team2_player2 == name){
-                stats[name].cups += team2_player2_cups;
-            }
-        }
-        stats[name].cpg = (stats[name].cups/stats[name].gp).toFixed(2);
+        stats[player.name] = {
+            name: player.name,
+            team: player.team_name,
+            gp: 0,
+            w: 0,
+            l: 0,
+            otl: 0,
+            cups: 0,
+            cpg: 0,
+        };
     }
 
-    const statsArray = Object.values(stats)
-    .sort((a, b) => {
-        return b.cups - a.cups;
+    for (const game of filteredGames) {
+        for (const playerName in stats) {
+            const s = stats[playerName];
+
+            if (game.team1_name === s.team || game.team2_name === s.team) {
+            s.gp++;
+            }
+
+            if (game.winner === s.team) s.w++;
+            if (game.loser === s.team) {
+            game.overtime ? s.otl++ : s.l++;
+            }
+
+            if (game.team1_player1 === playerName) s.cups += game.team1_player1_cups;
+            if (game.team1_player2 === playerName) s.cups += game.team1_player2_cups;
+            if (game.team2_player1 === playerName) s.cups += game.team2_player1_cups;
+            if (game.team2_player2 === playerName) s.cups += game.team2_player2_cups;
+        }
+    }
+
+    Object.values(stats).forEach(s => {
+        s.cpg = s.gp ? (s.cups / s.gp).toFixed(2) : '0.00';
     });
 
-    currentStats = statsArray;
+    currentStats = Object.values(stats).sort((a, b) => b.cups - a.cups);
     renderStats(currentStats);
 }
-
 
 let sortState = {}; // tracks which column & direction
 
@@ -175,5 +137,8 @@ function renderStats(data) {
       container.appendChild(row);
     });
   }  
+
+document.getElementById('season-filter').addEventListener('change', fetchAndCalculateStats);
+document.getElementById('type-filter').addEventListener('change', fetchAndCalculateStats);
 
 fetchAndCalculateStats();

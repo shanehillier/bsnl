@@ -118,6 +118,7 @@ function renderTeam(team, games) {
     }
 
     gamesArray = data;
+    gamesArray.sort((a, b) => a.id - b.id);
 
     } catch (err) {
         console.error('Error fetching events:', err);

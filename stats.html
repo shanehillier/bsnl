@@ -26,6 +26,26 @@
   </nav>
 
   <h1>STATS</h1>
+
+  <div class="stats-filters">
+    <div class="filter-group">
+      <label for="season-filter">Season</label>
+      <select id="season-filter">
+        <option value="all">All-Time</option>
+        <option value="s1">Season 1 (06-2025 to 01-2026)</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="type-filter">Games</label>
+      <select id="type-filter">
+        <option value="total">Total</option>
+        <option value="regular">Regular Season</option>
+        <option value="playoffs">Playoffs</option>
+      </select>
+    </div>
+  </div>
+
   <div class="standings-table" id="standings-table">
     <div class="stats-header">
         <div class="standings-stat">NAME</div>

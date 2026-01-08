@@ -572,6 +572,86 @@ body {
     grid-template-columns: 2fr 3fr repeat(6,1fr);
   }
 
+  .stats-filters {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 20px auto 30px;
+    flex-wrap: wrap;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #555;
+  }
+
+  .filter-group label {
+    margin-bottom: 6px;
+  }
+
+  .filter-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #111;
+
+    padding: 10px 36px 10px 12px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    cursor: pointer;
+
+    background-image:
+      linear-gradient(45deg, transparent 50%, #555 50%),
+      linear-gradient(135deg, #555 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) 50%,
+      calc(100% - 12px) 50%;
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .filter-group select:hover {
+    border-color: #999;
+  }
+
+  .filter-group select:focus {
+    outline: none;
+    border-color: #5da9ff;
+    box-shadow: 0 0 0 2px rgba(93, 169, 255, 0.25);
+  }
+
+  body.dark-mode .filter-group {
+    color: #aaa;
+  }
+
+  body.dark-mode .filter-group select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+
+    background-image:
+      linear-gradient(45deg, transparent 50%, #aaa 50%),
+      linear-gradient(135deg, #aaa 50%, transparent 50%);
+  }
+
+  body.dark-mode .filter-group select:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  body.dark-mode .filter-group select:focus {
+    border-color: #5da9ff;
+    box-shadow: 0 0 0 2px rgba(93, 169, 255, 0.25);
+  }
+
   /*Team Styles*/
   .team-card {
     background-color: white;
@@ -1049,6 +1129,13 @@ body.dark-mode .date:hover {
 body.dark-mode .game-card {
   background: #3e3e3e;
 }
+
+body.dark-mode .event-card {
+    background: #3e3e3e;
+  }
+body.dark-mode .event-title {
+    color: #ffffff;
+  }
 
 body.dark-mode .team-game-name {
   color: #ffffff;

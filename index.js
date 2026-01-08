@@ -127,7 +127,7 @@ async function fetchLatestResults() {
   const completedGames = resultsArray.filter(g => g.score1 !== null && g.score2 !== null);
 
   // Sort by date descending (newest first)
-  completedGames.sort((a, b) => new Date(b.date) - new Date(a.date));
+  completedGames.sort((a, b) => b.id - a.id);
 
   // Take top 10
   const latestGames = completedGames.slice(0, 10);
