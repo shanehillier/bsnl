@@ -1,3 +1,8 @@
+const SEASONS = {
+  s1: { start: new Date('2025-06-01'), end: new Date('2026-01-31') },
+  // Add future seasons here...
+};
+
 let currentStandings = [];
 let teamLogos = {};
 
@@ -27,21 +32,25 @@ async function fetchAndCalculateStandings() {
   try {
     const res = await fetch(`https://bsnl-backend.vercel.app/api/games`);
     const data = await res.json();
-
-    if (!Array.isArray(data)) {
-      console.error('Unexpected response:', data);
-      gamesArray = [];
-    } else {
-      gamesArray = data;
-    }
+    gamesArray = Array.isArray(data) ? data : [];
   } catch (err) {
     console.error('Error fetching games:', err);
     gamesArray = [];
   }
 
+  // Determine the most recent season
+  const latestSeasonKey = Object.keys(SEASONS).sort((a, b) => SEASONS[b].start - SEASONS[a].start)[0];
+  const { start, end } = SEASONS[latestSeasonKey];
+
+  // Filter to regular season games in the latest season
+  const filteredGames = gamesArray.filter(g => {
+    const gameDate = new Date(g.date);
+    return gameDate >= start && gameDate <= end && g.event_name !== 'Playoffs';
+  });
+
   const standings = {};
 
-  for (const game of gamesArray) {
+  for (const game of filteredGames) {
     const { team1_name, team2_name, score1, score2, winner, loser, overtime } = game;
 
     [team1_name, team2_name].forEach(team => {
@@ -67,14 +76,8 @@ async function fetchAndCalculateStandings() {
   }
 
   const standingsArray = Object.values(standings)
-    .map(team => ({
-      ...team,
-      plusMinus: team.cf - team.ca
-    }))
-    .sort((a, b) => {
-      if (b.pts !== a.pts) return b.pts - a.pts;
-      return b.plusMinus - a.plusMinus;
-    })
+    .map(team => ({ ...team, plusMinus: team.cf - team.ca }))
+    .sort((a, b) => (b.pts !== a.pts ? b.pts - a.pts : b.plusMinus - a.plusMinus))
     .map((team, index) => ({ ...team, rank: index + 1 }));
 
   currentStandings = standingsArray;
@@ -140,9 +143,7 @@ async function fetchLatestResults() {
     const isOT = game.overtime;
 
     // Format date
-    const gameDate = game.date 
-      ? new Date(game.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) 
-      : '';
+    const gameDate = formatLocalDate(game.date);
 
     resultsHTML += `
       <div class="latest-result-card">
@@ -166,5 +167,13 @@ async function fetchLatestResults() {
   document.getElementById('latest-results-body').innerHTML = resultsHTML;
 }
 
+// Format date correctly for local timezone
+function formatLocalDate(dateStr) {
+  if (!dateStr) return '';
+  // Split YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS
+  const [year, month, day] = dateStr.split('T')[0].split('-');
+  const d = new Date(year, month - 1, day); // month is 0-indexed
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
 
 loadTeamLogos();

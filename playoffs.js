@@ -1,3 +1,29 @@
+const USE_MANUAL_BRACKET = true; // Set to true to use manual bracket configuration
+
+const MANUAL_BRACKET = {
+  rounds: [
+    {
+      title: "Round 1",
+      matches: [
+        { team1: "Balls Deep", team2: "Labubu Ladies", winner: "Balls Deep", note: "Balls Deep Wins 2-0"  }
+      ]
+    },
+    {
+      title: "Semi-Finals",
+      matches: [
+        { team1: "2 Girls, 1 Cup", team2: "Balls Deep", winner: "2 Girls, 1 Cup", note: "2 Girls, 1 Cup Wins 2-1" },
+        { team1: "Fent Fellas", team2: "Short Stacks", winner: "Short Stacks", note: "Short Stacks Wins 2-1"  }
+      ]
+    },
+    {
+      title: "Final",
+      matches: [
+        { team1: "2 Girls, 1 Cup", team2: "Short Stacks", winner: "2 Girls, 1 Cup", note: "2 Girls, 1 Cup Wins 3-0"  }
+      ]
+    }
+  ]
+};
+
 let currentStandings = [];
 let teamLogos = {};
 
@@ -6,10 +32,7 @@ async function loadTeamLogos() {
     const res = await fetch(`https://bsnl-backend.vercel.app/api/teams`);
     const data = await res.json();
 
-    if (!Array.isArray(data)) {
-      console.error("Unexpected response:", data);
-      return;
-    }
+    if (!Array.isArray(data)) return;
 
     data.forEach(team => {
       teamLogos[team.name] = team.logo_path;
@@ -18,24 +41,22 @@ async function loadTeamLogos() {
     console.error("Error fetching team logos:", err);
   }
 
-  fetchAndCalculateStandings();
+  if (USE_MANUAL_BRACKET) {
+    buildManualBracket(MANUAL_BRACKET, teamLogos);
+  } else {
+    fetchAndCalculateStandings();
+  }
 }
 
 async function fetchAndCalculateStandings() {
   let gamesArray = [];
+
   try {
     const res = await fetch(`https://bsnl-backend.vercel.app/api/games`);
     const data = await res.json();
-
-    if (!Array.isArray(data)) {
-      console.error("Unexpected response:", data);
-      gamesArray = [];
-    } else {
-      gamesArray = data;
-    }
+    if (Array.isArray(data)) gamesArray = data;
   } catch (err) {
     console.error("Error fetching games:", err);
-    gamesArray = [];
   }
 
   const standings = {};
@@ -43,11 +64,10 @@ async function fetchAndCalculateStandings() {
   for (const game of gamesArray) {
     const { team1_name, team2_name, score1, score2, winner, loser, overtime } = game;
 
-    // Ensure both teams exist
     for (const team of [team1_name, team2_name]) {
       if (!standings[team]) {
         standings[team] = {
-          team: team,
+          team,
           gp: 0,
           w: 0,
           l: 0,
@@ -60,31 +80,27 @@ async function fetchAndCalculateStandings() {
       }
     }
 
-    standings[team1_name].gp += 1;
-    standings[team2_name].gp += 1;
+    standings[team1_name].gp++;
+    standings[team2_name].gp++;
 
     standings[team1_name].cf += score1;
     standings[team1_name].ca += score2;
     standings[team2_name].cf += score2;
     standings[team2_name].ca += score1;
 
-    for (const t of Object.values(standings)) {
-      t.plusMinus = t.cf - t.ca;
-    }
-
-    standings[winner].w += 1;
-    standings[loser].l += overtime ? 0 : 1;
-    standings[loser].otl += overtime ? 1 : 0;
-
+    standings[winner].w++;
     standings[winner].pts += 2;
-    if (overtime) standings[loser].pts += 1;
+
+    if (overtime) {
+      standings[loser].otl++;
+      standings[loser].pts += 1;
+    } else {
+      standings[loser].l++;
+    }
   }
 
   const standingsArray = Object.values(standings)
-    .map(team => ({
-      ...team,
-      plusMinus: team.cf - team.ca,
-    }))
+    .map(t => ({ ...t, plusMinus: t.cf - t.ca }))
     .sort((a, b) => {
       if (b.pts !== a.pts) return b.pts - a.pts;
       return b.plusMinus - a.plusMinus;
@@ -109,7 +125,8 @@ function buildBracket(teams, logos) {
   }
 }
 
-// CUSTOM 5-TEAM BRACKET
+/* ---------- 5 TEAM BRACKET ---------- */
+
 function buildFiveTeamBracket(teams, logos, container) {
   const [seed1, seed2, seed3, seed4, seed5] = teams;
 
@@ -131,7 +148,7 @@ function buildFiveTeamBracket(teams, logos, container) {
         <span>vs</span>
         <div class="playoffteam">Winner of 4 vs 5</div>
       </div>
-       <div class="playoffmatch">
+      <div class="playoffmatch">
         <div class="playoffteam">${renderTeam(seed2, logos)}</div>
         <span>vs</span>
         <div class="playoffteam">${renderTeam(seed3, logos)}</div>
@@ -149,12 +166,15 @@ function buildFiveTeamBracket(teams, logos, container) {
   `;
 }
 
-//GENERIC BRACKET BUILDER (works best with multiples of 2)
+/* ---------- STANDARD BRACKET ---------- */
+
 function buildStandardBracket(teams, logos, container) {
-  // Pad to next power of 2
   const size = Math.pow(2, Math.ceil(Math.log2(teams.length)));
   const padded = [...teams];
-  while (padded.length < size) padded.push({ team: "BYE", rank: "-" });
+
+  while (padded.length < size) {
+    padded.push({ team: "BYE", rank: "-" });
+  }
 
   let roundTeams = padded;
   let roundNum = 1;
@@ -162,9 +182,10 @@ function buildStandardBracket(teams, logos, container) {
   while (roundTeams.length > 1) {
     const roundDiv = document.createElement("div");
     roundDiv.className = "round";
-    roundDiv.innerHTML = `<h2>${roundTitle(roundNum, roundTeams.length)}</h2>`;
+    roundDiv.innerHTML = `<h2>${roundTitle(roundTeams.length)}</h2>`;
 
     const nextRound = [];
+
     for (let i = 0; i < roundTeams.length; i += 2) {
       const t1 = roundTeams[i];
       const t2 = roundTeams[i + 1];
@@ -176,8 +197,8 @@ function buildStandardBracket(teams, logos, container) {
         <span>vs</span>
         <div class="playoffteam">${renderTeam(t2, logos)}</div>
       `;
-      roundDiv.appendChild(matchDiv);
 
+      roundDiv.appendChild(matchDiv);
       nextRound.push({ team: "Winner", rank: "-" });
     }
 
@@ -187,17 +208,57 @@ function buildStandardBracket(teams, logos, container) {
   }
 }
 
-function roundTitle(roundNum, teamsLeft) {
+function roundTitle(teamsLeft) {
   if (teamsLeft === 2) return "Final";
   if (teamsLeft === 4) return "Semi-Finals";
   if (teamsLeft === 8) return "Quarter-Finals";
-  return `Round ${roundNum}`;
+  return "Round";
+}
+
+function buildManualBracket(config, logos) {
+  const container = document.getElementById("bracket-container");
+  container.innerHTML = "";
+
+  config.rounds.forEach(round => {
+    const roundDiv = document.createElement("div");
+    roundDiv.className = "round";
+    roundDiv.innerHTML = `<h2>${round.title}</h2>`;
+
+    round.matches.forEach(match => {
+      const matchDiv = document.createElement("div");
+      matchDiv.className = "playoffmatch";
+
+      matchDiv.innerHTML = `
+        <div class="playoffteam ${match.winner === match.team1 ? "winner" : ""}">
+          ${renderTeamName(match.team1, logos)}
+        </div>
+        <span>vs</span>
+        <div class="playoffteam ${match.winner === match.team2 ? "winner" : ""}">
+          ${renderTeamName(match.team2, logos)}
+        </div>
+        ${match.note ? `<div class="note">${match.note}</div>` : ""}
+      `;
+
+      roundDiv.appendChild(matchDiv);
+    });
+
+    container.appendChild(roundDiv);
+  });
 }
 
 function renderTeam(team, logos) {
-  if (!team || team.team === "BYE") return `<span style="color:#aaa;">BYE</span>`;
+  if (!team || team.team === "BYE") {
+    return `<span style="color:#aaa;">BYE</span>`;
+  }
+
   const logo = logos[team.team];
   return `${logo ? `<img src="${logo}" style="height:20px;">` : ""} ${team.team} (Seed ${team.rank})`;
+}
+
+function renderTeamName(name, logos) {
+  if (!name) return "TBD";
+  const logo = logos[name];
+  return `${logo ? `<img src="${logo}" style="height:20px;">` : ""} ${name}`;
 }
 
 loadTeamLogos();
