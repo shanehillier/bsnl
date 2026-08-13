@@ -1,5 +1,6 @@
 const SEASONS = {
   s1: { start: new Date('2025-06-01'), end: new Date('2026-01-31') },
+  s2: { start: new Date('2026-08-01'), end: new Date('2099-12-31') },
 };
 
 let currentStandings = [];
@@ -22,7 +23,7 @@ async function loadTeamLogos() {
 }
 
 async function fetchAndCalculateStandings() {
-  const seasonValue = document.getElementById('season-filter')?.value || 'all';
+  const seasonValue = document.getElementById('season-filter')?.value || 's2';
   const typeValue = 'regular'; // Standings only for regular season
 
   if (allGames.length === 0) {

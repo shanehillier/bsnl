@@ -2,76 +2,114 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BSNL Home</title>
   <link rel="icon" type="image/x-icon" href="./resources/favicon.ico">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="background-overlay"></div>
-    <!-- Navigation Bar -->
-    <nav>
-      <div class="nav-logo">
-        <img src="./resources/navLogo.png" alt="BSNL Logo" />
-      </div>
-      <div class="nav-links">
-        <a href="index.html">HOME</a>
-        <a href="news.html">NEWS</a>
-        <a href="schedule.html">SCHEDULE</a>
-        <a href="standings.html">STANDINGS</a>
-        <a href="playoffs.html">PLAYOFFS</a>
-        <a href="stats.html">STATS</a>
-        <a href="teams.html">TEAMS</a>
-      </div>
-    </nav>
 
-  <h1>HOME</h1>
-
-  <div class="main-sections">
-    <div class="latest-results">
-      <h2>LATEST RESULTS</h2>
-      <div id="latest-results-body" class="latest-results-body">Loading...</div>
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="nav-logo">
+      <img src="./resources/navLogo.png" alt="BSNL Logo" />
     </div>
-
-    <div class="news-section">
-      <h2>LATEST NEWS</h2>
-
-      <div class="news-item">
-        <a href="news.html#season1results"><h3>Season 1 Comes to an End!</h3></a>
-      </div>
-
-      <div class="news-item">
-        <a href="news.html#season1playoffs"><h3>Season 1 Playoffs!</h3></a>
-      </div>
-
-      <div class="news-item">
-        <a href="news.html#regan"><h3>BREAKING: Regan Trade to Labubu Ladies is Nixed!</h3></a>
-      </div>
-
-      <div class="news-item">
-        <a href="news.html#july-poll"><h3>July Game Day Poll Open!</h3></a>
-      </div>
-
-      <div class="news-item">
-        <a href="news.html#draft-results"><h3>Draft & June Game Day Results</h3></a>
-      </div>
-
-      <div class="news-item">
-        <a href="news.html#league-rules"><h3>League Rules Available</h3></a>
-      </div>
-
-      <div class="news-item">
-        <a href="news.html#bsnl-quote"><p>"Respect thy table..."</p></a>
-      </div>
+    <div class="nav-links">
+      <a href="index.html">HOME</a>
+      <a href="news.html">NEWS</a>
+      <a href="schedule.html">SCHEDULE</a>
+      <a href="standings.html">STANDINGS</a>
+      <a href="stats.html">STATS</a>
+      <a href="teams.html">TEAMS</a>
     </div>
+  </nav>
 
-    <div class="standings">
-    <h2>STANDINGS</h2>
-    <div id="standings-body" class="standings-body">Loading...</div>
-  </div>
-</div>
+  <main class="home-feed">
+    <h1 class="sr-only">BSNL Home</h1>
 
-<button id="mode-toggle" class="mode-toggle">🌙</button>
+    <section class="home-results" aria-label="Latest results">
+      <div id="latest-results-body" class="latest-results-body home-results-track">
+        Loading...
+      </div>
+    </section>
+
+    <section class="home-news" aria-labelledby="latest-news-heading">
+      <div class="feed-section-heading">
+        <h2 id="latest-news-heading">Latest News</h2>
+        <a href="news.html">All news</a>
+      </div>
+
+      <div class="home-news-list">
+        <article class="home-news-card">
+          <a href="news.html#season1results">
+            <p class="news-card-kicker">League News</p>
+            <h3>Season 1 Comes to an End!</h3>
+            <span class="news-card-link">Read story &rarr;</span>
+          </a>
+        </article>
+
+        <article class="home-news-card">
+          <a href="news.html#season1playoffs">
+            <p class="news-card-kicker">Playoffs</p>
+            <h3>Season 1 Playoffs!</h3>
+            <span class="news-card-link">Read story &rarr;</span>
+          </a>
+        </article>
+
+        <article class="home-news-card">
+          <a href="news.html#regan">
+            <p class="news-card-kicker">Breaking</p>
+            <h3>BREAKING: Regan Trade to Labubu Ladies is Nixed!</h3>
+            <span class="news-card-link">Read story &rarr;</span>
+          </a>
+        </article>
+
+        <article class="home-news-card">
+          <a href="news.html#july-poll">
+            <p class="news-card-kicker">League Update</p>
+            <h3>July Game Day Poll Open!</h3>
+            <span class="news-card-link">Read story &rarr;</span>
+          </a>
+        </article>
+
+        <article class="home-news-card">
+          <a href="news.html#draft-results">
+            <p class="news-card-kicker">Results</p>
+            <h3>Draft &amp; June Game Day Results</h3>
+            <span class="news-card-link">Read story &rarr;</span>
+          </a>
+        </article>
+
+        <article class="home-news-card">
+          <a href="news.html#league-rules">
+            <p class="news-card-kicker">League Update</p>
+            <h3>League Rules Available</h3>
+            <span class="news-card-link">Read story &rarr;</span>
+          </a>
+        </article>
+
+        <article class="home-news-card home-news-quote">
+          <a href="news.html#bsnl-quote">
+            <p>&ldquo;Respect thy table...&rdquo;</p>
+            <span class="news-card-link">Read story &rarr;</span>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <section class="home-standings" aria-labelledby="standings-heading">
+      <div class="feed-section-heading">
+        <h2 id="standings-heading">Standings</h2>
+        <a href="standings.html">Full table</a>
+      </div>
+      <div id="standings-body" class="standings-body">Loading...</div>
+    </section>
+  </main>
+
+  <button id="mode-toggle" class="mode-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
+
+  <script src="index.js"></script>
+  <script src="darkmode.js"></script>
 </body>
-<script src="index.js"></script>
-<script src="darkmode.js"></script>
 </html>

@@ -27,28 +27,37 @@ async function loadTeamLogos() {
 let currentDate = new Date();
 
 async function getEventDatesForMonth(year, month) {
-    const firstDayOfMonth = new Date(year, month, 1);
-    const lastDayOfMonth = new Date(year, month + 1, 0);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
 
-    const start = `${year}-${String(month + 1).padStart(2, '0')}-01`;
-    const end = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDayOfMonth.getDate()).padStart(2, '0')}`;
+  const start = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+  const end = `${year}-${String(month + 1).padStart(2, '0')}-${String(
+    lastDayOfMonth.getDate()
+  ).padStart(2, '0')}`;
 
-    try {
-        const res = await fetch(`https://bsnl-backend.vercel.app/api/eventsrange?start=${start}&end=${end}`);
-        const data = await res.json();
+  try {
+    const res = await fetch(
+      `https://bsnl-backend.vercel.app/api/eventsrange?start=${start}&end=${end}`
+    );
 
-        if (!Array.isArray(data)) {
-            console.error('Unexpected response:', data);
-            return [];
-        }
+    const data = await res.json();
 
-        const dates = data.map(event => new Date(event.date).getDate());
-        return dates;
-
-    } catch (err) {
-        console.error('Error fetching events:', err);
-        return [];
+    if (!Array.isArray(data)) {
+      console.error('Unexpected response:', data);
+      return new Set();
     }
+
+    /* Read the YYYY-MM-DD portion directly to avoid timezone shifts */
+    return new Set(
+      data.map(event => {
+        const dateString = String(event.date).split('T')[0];
+        const [, , day] = dateString.split('-');
+        return Number(day);
+      })
+    );
+  } catch (err) {
+    console.error('Error fetching events:', err);
+    return new Set();
+  }
 }
 
 const updateCalendar = async () => {
@@ -76,7 +85,7 @@ const updateCalendar = async () => {
     for (let i = 1; i <= totalDays; i++) {
         const date = new Date(currentYear, currentMonth, i);
         const isActive = date.toDateString() === new Date().toDateString();
-        const hasEvent = eventDays.includes(i-1);
+        const hasEvent = eventDays.has(i);
         const classes = ['date'];
         if (isActive) classes.push('active');
         if (hasEvent) classes.push('has-event');

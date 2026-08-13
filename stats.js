@@ -1,12 +1,13 @@
 const SEASONS = {
   s1: { start: new Date('2025-06-01'), end: new Date('2026-01-31') },
+  s2: { start: new Date('2026-08-01'), end: new Date('2099-12-31') },
 };
 
 let currentStats = [];
 let allGames = [];
 
 async function fetchAndCalculateStats() {
-  const seasonValue = document.getElementById('season-filter')?.value || 'all';
+  const seasonValue = document.getElementById('season-filter')?.value || 's2';
   const typeValue = document.getElementById('type-filter')?.value || 'total';
 
   const playersRes = await fetch(`https://bsnl-backend.vercel.app/api/players`);
@@ -117,8 +118,12 @@ async function fetchAndCalculateStats() {
     s.ncpg = s.gp ? (s.ncups / s.gp).toFixed(2) : '0.00';
   });
 
-  // Default sort: normalized cups
-  currentStats = Object.values(stats).sort((a, b) => b.ncups - a.ncups);
+  // Hide players who did not play any games in the selected filters.
+  // Then sort remaining players by normalized cups.
+  currentStats = Object.values(stats)
+    .filter(player => player.gp > 0)
+    .sort((a, b) => b.ncups - a.ncups);
+
   renderStats(currentStats);
 }
 
@@ -155,6 +160,15 @@ document.querySelectorAll('.standings-stat[data-key]').forEach(header => {
 function renderStats(data) {
   const container = document.getElementById('stats-body');
   container.innerHTML = '';
+
+  if (data.length === 0) {
+    container.innerHTML = `
+      <p class="stats-empty-state">
+        No player statistics are available for this selection.
+      </p>
+    `;
+    return;
+  }
 
   data.forEach(player => {
     const row = document.createElement('div');

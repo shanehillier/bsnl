@@ -1,7 +1,92 @@
 const SEASONS = {
   s1: { start: new Date('2025-06-01'), end: new Date('2026-01-31') },
-  // Add future seasons here...
+  s2: { start: new Date('2026-08-01'), end: new Date('2099-12-31') },
 };
+
+let resultsAutoScrollFrame = null;
+let resultsAutoScrollStopped = false;
+let resultsScrollDirection = 1;
+let resultsLastFrameTime = 0;
+
+function stopResultsAutoScroll() {
+  resultsAutoScrollStopped = true;
+
+  if (resultsAutoScrollFrame) {
+    cancelAnimationFrame(resultsAutoScrollFrame);
+    resultsAutoScrollFrame = null;
+  }
+}
+
+function startResultsAutoScroll() {
+  const resultsTrack = document.getElementById('latest-results-body');
+
+  if (
+    !resultsTrack ||
+    resultsAutoScrollStopped ||
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    resultsTrack.scrollWidth <= resultsTrack.clientWidth
+  ) {
+    return;
+  }
+
+  if (resultsAutoScrollFrame) {
+    cancelAnimationFrame(resultsAutoScrollFrame);
+  }
+
+  resultsScrollDirection = 1;
+  resultsLastFrameTime = 0;
+
+  const scrollResults = timestamp => {
+    if (resultsAutoScrollStopped) return;
+
+    if (!resultsLastFrameTime) {
+      resultsLastFrameTime = timestamp;
+    }
+
+    const elapsed = timestamp - resultsLastFrameTime;
+    resultsLastFrameTime = timestamp;
+
+    const maxScroll = resultsTrack.scrollWidth - resultsTrack.clientWidth;
+
+    /* Slow speed: approximately 25 pixels per second */
+    resultsTrack.scrollLeft += resultsScrollDirection * elapsed * 0.025;
+
+    /* Reverse direction at either end of the strip */
+    if (resultsTrack.scrollLeft >= maxScroll) {
+      resultsTrack.scrollLeft = maxScroll;
+      resultsScrollDirection = -1;
+    } else if (resultsTrack.scrollLeft <= 0) {
+      resultsTrack.scrollLeft = 0;
+      resultsScrollDirection = 1;
+    }
+
+    resultsAutoScrollFrame = requestAnimationFrame(scrollResults);
+  };
+
+  resultsAutoScrollFrame = requestAnimationFrame(scrollResults);
+}
+
+function setUpResultsAutoScrollControls() {
+  const resultsTrack = document.getElementById('latest-results-body');
+
+  if (!resultsTrack) return;
+
+  /* Any user interaction means the user has taken over */
+  resultsTrack.addEventListener('pointerdown', stopResultsAutoScroll, {
+    passive: true
+  });
+
+  resultsTrack.addEventListener('touchstart', stopResultsAutoScroll, {
+    passive: true
+  });
+
+  resultsTrack.addEventListener('wheel', stopResultsAutoScroll, {
+    passive: true
+  });
+
+  resultsTrack.addEventListener('keydown', stopResultsAutoScroll);
+  resultsTrack.addEventListener('focusin', stopResultsAutoScroll);
+}
 
 let currentStandings = [];
 let teamLogos = {};
@@ -164,7 +249,16 @@ async function fetchLatestResults() {
     `;
   }
 
-  document.getElementById('latest-results-body').innerHTML = resultsHTML;
+  const resultsTrack = document.getElementById('latest-results-body');
+
+  resultsTrack.innerHTML = resultsHTML;
+
+  setUpResultsAutoScrollControls();
+
+  /* Wait for the browser to measure the newly rendered game cards */
+  requestAnimationFrame(() => {
+    startResultsAutoScroll();
+  });
 }
 
 // Format date correctly for local timezone

@@ -2,52 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BSNL Stats</title>
   <link rel="icon" type="image/x-icon" href="./resources/favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background-overlay"></div>
+  <div class="background-overlay"></div>
+
   <!-- Navigation Bar -->
   <nav>
     <div class="nav-logo">
       <img src="./resources/navLogo.png" alt="BSNL Logo" />
     </div>
     <div class="nav-links">
-        <a href="index.html">HOME</a>
-        <a href="news.html">NEWS</a>
-        <a href="schedule.html">SCHEDULE</a>
-        <a href="standings.html">STANDINGS</a>
-        <a href="playoffs.html">PLAYOFFS</a>
-        <a href="stats.html">STATS</a>
-        <a href="teams.html">TEAMS</a>
-      </div>
+      <a href="index.html">HOME</a>
+      <a href="news.html">NEWS</a>
+      <a href="schedule.html">SCHEDULE</a>
+      <a href="standings.html">STANDINGS</a>
+      <a href="stats.html">STATS</a>
+      <a href="teams.html">TEAMS</a>
+    </div>
   </nav>
 
-  <h1>STATS</h1>
+  <main class="stats-page">
+    <header class="stats-page-header">
+      <h1>Stats</h1>
+      <div aria-hidden="true"></div>
+    </header>
 
-  <div class="stats-filters">
-    <div class="filter-group">
-      <label for="season-filter">Season</label>
-      <select id="season-filter">
-        <option value="all">All-Time</option>
-        <option value="s1">Season 1 (06-2025 to 01-2026)</option>
-      </select>
+    <div class="stats-filters stats-filter-bar">
+      <div class="filter-group">
+        <label for="season-filter">Season</label>
+        <select id="season-filter">
+          <option value="s2" selected>Season 2 (Current)</option>
+          <option value="s1">Season 1 (06-2025 to 01-2026)</option>
+          <option value="all">All-Time</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="type-filter">Games</label>
+        <select id="type-filter">
+          <option value="total">Total</option>
+          <option value="regular">Regular Season</option>
+          <option value="playoffs">Playoffs</option>
+        </select>
+      </div>
     </div>
 
-    <div class="filter-group">
-      <label for="type-filter">Games</label>
-      <select id="type-filter">
-        <option value="total">Total</option>
-        <option value="regular">Regular Season</option>
-        <option value="playoffs">Playoffs</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="standings-table" id="standings-table">
-    <div class="stats-header">
+    <div class="standings-table stats-table" id="standings-table" aria-label="Player statistics table">
+      <div class="stats-header">
         <div class="standings-stat">NAME</div>
         <div class="standings-stat">TEAM</div>
         <div class="standings-stat" data-key="gp">GP</div>
@@ -58,29 +64,23 @@
         <div class="standings-stat" data-key="cpg">C/GP</div>
         <div class="standings-stat" data-key="ncups">nC</div>
         <div class="standings-stat" data-key="ncpg">nC/GP</div>
-    </div>
+      </div>
 
-    <div class="stats-body" id="stats-body">
+      <div class="stats-body" id="stats-body" aria-live="polite">
         Loading...
+      </div>
     </div>
-  </div>
 
-  <div class="legend compact">
-    <strong>Legend:</strong>
-    GP = Games Played,&nbsp;
-    W = Wins,&nbsp;
-    L = Losses,&nbsp;
-    OTL = OT Losses,&nbsp;
-    CUPS = Cups Hit,&nbsp;
-    C/GP = Cups Per Game Played,&nbsp;
-    nC = Normalized Cups [(cups * team size) / 2],&nbsp;
-    nC/GP = Normalized Cups Per Game Played
-  </div>
+    <details class="legend compact stats-legend">
+      <summary>Stats legend</summary>
+      <p><strong>GP</strong> = Games Played &middot; <strong>W</strong> = Wins &middot; <strong>L</strong> = Losses &middot; <strong>OTL</strong> = OT Losses &middot; <strong>CUPS</strong> = Cups Hit &middot; <strong>C/GP</strong> = Cups Per Game Played &middot; <strong>nC</strong> = Normalized Cups [(cups × team size) / 2] &middot; <strong>nC/GP</strong> = Normalized Cups Per Game Played</p>
+    </details>
+  </main>
 
-  <button id="mode-toggle" class="mode-toggle">🌙</button>
+  <button id="mode-toggle" class="mode-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="stats.js"></script>
+  <script src="darkmode.js"></script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="stats.js"></script>
-<script src="darkmode.js"></script>
 </html>

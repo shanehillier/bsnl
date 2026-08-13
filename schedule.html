@@ -2,67 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BSNL Schedule</title>
   <link rel="icon" type="image/x-icon" href="./resources/favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background-overlay"></div>
+  <div class="background-overlay"></div>
+
   <!-- Navigation Bar -->
   <nav>
     <div class="nav-logo">
       <img src="./resources/navLogo.png" alt="BSNL Logo" />
     </div>
     <div class="nav-links">
-        <a href="index.html">HOME</a>
-        <a href="news.html">NEWS</a>
-        <a href="schedule.html">SCHEDULE</a>
-        <a href="standings.html">STANDINGS</a>
-        <a href="playoffs.html">PLAYOFFS</a>
-        <a href="stats.html">STATS</a>
-        <a href="teams.html">TEAMS</a>
-      </div>
+      <a href="index.html">HOME</a>
+      <a href="news.html">NEWS</a>
+      <a href="schedule.html">SCHEDULE</a>
+      <a href="standings.html">STANDINGS</a>
+      <a href="stats.html">STATS</a>
+      <a href="teams.html">TEAMS</a>
+    </div>
   </nav>
 
-  <h1>SCHEDULE</h1>
-  <div class="schedule-container">
-    <div class="calendar">
-        <div class="calendar-header">   
-            <button class="prev-button" id="prev-button">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <div class="month-year" id="month-year">Loading...</div>
-            <button class="next-button" id="next-button">
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
+  <main class="schedule-page">
+    <header class="schedule-page-header">
+      <h1>Schedule</h1>
+      <div aria-hidden="true"></div>
+    </header>
+
+    <div class="schedule-container">
+      <section class="calendar" aria-label="League calendar">
+        <div class="calendar-header">
+          <button class="prev-button" id="prev-button" type="button" aria-label="Previous month">
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <div class="month-year" id="month-year">Loading...</div>
+          <button class="next-button" id="next-button" type="button" aria-label="Next month">
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
         </div>
-        <div class="days">
-            <div class="day">MON</div>
-            <div class="day">TUE</div>
-            <div class="day">WED</div>
-            <div class="day">THU</div>
-            <div class="day">FRI</div>
-            <div class="day">SAT</div>
-            <div class="day">SUN</div>
+        <div class="days" aria-hidden="true">
+          <div class="day">MON</div>
+          <div class="day">TUE</div>
+          <div class="day">WED</div>
+          <div class="day">THU</div>
+          <div class="day">FRI</div>
+          <div class="day">SAT</div>
+          <div class="day">SUN</div>
         </div>
-        <div class="dates" id="dates">
-        </div>
+        <div class="dates" id="dates"></div>
+      </section>
+
+      <section class="events" id="events" aria-live="polite">Loading...</section>
     </div>
-    <div class="events" id="events">Loading...</div></div>
+  </main>
+
+  <div id="game-modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Game details">
+    <div class="modal-content">
+      <div id="modal-body"></div>
+    </div>
   </div>
 
-  <div id="game-modal" class="modal hidden">
-  <div class="modal-content">
-    <div id="modal-body">
-    </div>
-  </div>
-</div>
+  <button id="mode-toggle" class="mode-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
 
-<button id="mode-toggle" class="mode-toggle">🌙</button>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="schedule.js"></script>
+  <script src="darkmode.js"></script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="schedule.js"></script>
-<script src="darkmode.js"></script>
 </html>

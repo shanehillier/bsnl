@@ -2,42 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BSNL Standings</title>
   <link rel="icon" type="image/x-icon" href="./resources/favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background-overlay"></div>
+  <div class="background-overlay"></div>
+
   <!-- Navigation Bar -->
   <nav>
     <div class="nav-logo">
       <img src="./resources/navLogo.png" alt="BSNL Logo" />
     </div>
     <div class="nav-links">
-        <a href="index.html">HOME</a>
-        <a href="news.html">NEWS</a>
-        <a href="schedule.html">SCHEDULE</a>
-        <a href="standings.html">STANDINGS</a>
-        <a href="playoffs.html">PLAYOFFS</a>
-        <a href="stats.html">STATS</a>
-        <a href="teams.html">TEAMS</a>
-      </div>
+      <a href="index.html">HOME</a>
+      <a href="news.html">NEWS</a>
+      <a href="schedule.html">SCHEDULE</a>
+      <a href="standings.html">STANDINGS</a>
+      <a href="stats.html">STATS</a>
+      <a href="teams.html">TEAMS</a>
+    </div>
   </nav>
 
-  <h1>STANDINGS</h1>
+  <main class="standings-page">
+    <header class="standings-page-header">
+      <h1>Standings</h1>
+      <div aria-hidden="true"></div>
+    </header>
 
-  <div class="stats-filters">
-    <div class="filter-group">
-      <label for="season-filter">Season</label>
-      <select id="season-filter">
-        <option value="s1">Season 1 (06-2025 to 01-2026)</option>
-      </select>
+    <div class="stats-filters standings-filter-bar">
+      <div class="filter-group">
+        <label for="season-filter">Season</label>
+        <select id="season-filter">
+          <option value="s2" selected>Season 2 (Current)</option>
+          <option value="s1">Season 1 (06-2025 to 01-2026)</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <div class="standings-table" id="standings-table">
-    <div class="standings-header">
+    <div class="standings-table" id="standings-table" aria-label="League standings table">
+      <div class="standings-header">
         <div class="standings-stat" data-key="team">TEAM</div>
         <div class="standings-stat" data-key="rank">RANK</div>
         <div class="standings-stat" data-key="gp">GP</div>
@@ -47,30 +53,23 @@
         <div class="standings-stat" data-key="pts">PTS</div>
         <div class="standings-stat" data-key="cf">CF</div>
         <div class="standings-stat" data-key="ca">CA</div>
-        <div class="standings-stat" data-key="plusMinus">+/-</div>      
-    </div>
-    <div class="standings-body" id="standings-body">
+        <div class="standings-stat" data-key="plusMinus">+/-</div>
+      </div>
+      <div class="standings-body" id="standings-body" aria-live="polite">
         Loading...
+      </div>
     </div>
-  </div>
 
-  <div class="legend compact">
-    <strong>Legend:</strong>
-    RANK = Position,&nbsp;
-    GP = Games Played,&nbsp;
-    W = Wins,&nbsp;
-    L = Losses,&nbsp;
-    OTL = OT Losses,&nbsp;
-    PTS = Points,&nbsp;
-    CF = Cups For,&nbsp;
-    CA = Cups Against,&nbsp;
-    +/- = Plus/Minus
-  </div>
-  
-<button id="mode-toggle" class="mode-toggle">🌙</button>
+    <details class="legend compact standings-legend">
+      <summary>Standings legend</summary>
+      <p><strong>RANK</strong> = Position &middot; <strong>GP</strong> = Games Played &middot; <strong>W</strong> = Wins &middot; <strong>L</strong> = Losses &middot; <strong>OTL</strong> = OT Losses &middot; <strong>PTS</strong> = Points &middot; <strong>CF</strong> = Cups For &middot; <strong>CA</strong> = Cups Against &middot; <strong>+/-</strong> = Plus/Minus</p>
+    </details>
+  </main>
 
+  <button id="mode-toggle" class="mode-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="standings.js"></script>
+  <script src="darkmode.js"></script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="standings.js"></script>
-<script src="darkmode.js"></script>
 </html>
