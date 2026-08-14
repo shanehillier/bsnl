@@ -39,7 +39,7 @@ body {
   z-index: -1;
   opacity: .035;
   pointer-events: none;
-  background-image: url('./resources/bsnl_logo.png');
+  background-image: url('./resources/navLogo.png');
   background-repeat: repeat;
   background-position: top left;
 }
