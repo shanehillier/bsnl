@@ -1970,3 +1970,27 @@ body.dark-mode .stats-empty-state {
 .home-results-track > * {
   scroll-snap-align: none;
 }
+
+/* Wide screens: make all table header cells fill the available width */
+@media (min-width: 701px) {
+  /* Standings */
+  .standings-page .standings-header,
+  .standings-page .standings-row {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(190px, 2.5fr) repeat(9, minmax(0, 1fr));
+  }
+
+  /* Stats header */
+  .stats-page .stats-header {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(150px, 2fr) minmax(180px, 3fr) repeat(8, minmax(0, 1fr));
+  }
+
+  /* Stats data rows use .standings-row in stats.js */
+  .stats-page .standings-row {
+    width: 100%;
+    min-width: 0;
+  }
+}
